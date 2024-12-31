@@ -334,5 +334,5 @@ const PortfolioGrowthCalculator = () => {
       )}
     </div>
   );
-
+};
 export default PortfolioGrowthCalculator;
