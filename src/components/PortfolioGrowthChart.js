@@ -142,193 +142,190 @@ const PortfolioGrowthCalculator = () => {
   const investmentData = calculateChildInvestments();
 
   return (
-    <div className="max-w-7xl mx-auto p-4">
-      <form onSubmit={handleSubmit} className="mb-8 p-4 bg-gray-50 rounded-lg">
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
+    <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
+      <form onSubmit={handleSubmit} className="mb-8 p-6 bg-white rounded-xl shadow-sm">
+        <div className="grid grid-cols-2 gap-6 mb-6">
+          <div className="bg-white p-4 rounded-lg">
+            <label className="block text-sm font-medium text-gray-600 mb-2">
               Target Amount ($)
               <input
                 type="number"
                 value={targetAmount}
                 onChange={(e) => setTargetAmount(Number(e.target.value))}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
+                className="mt-2 block w-full rounded-lg border-gray-200 border p-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500"
                 min="1000"
               />
             </label>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
+          <div className="bg-white p-4 rounded-lg">
+            <label className="block text-sm font-medium text-gray-600 mb-2">
               Target Age
               <input
                 type="number"
                 value={targetAge}
                 onChange={(e) => setTargetAge(Number(e.target.value))}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
+                className="mt-2 block w-full rounded-lg border-gray-200 border p-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500"
                 min="10"
                 max="25"
               />
             </label>
           </div>
         </div>
-
-        <div className="mb-4">
-          <h3 className="text-lg font-medium mb-2">Portfolio Allocation (%)</h3>
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Growth Portfolio
-                <input
-                  type="number"
-                  value={allocation.growth}
-                  onChange={(e) => handleAllocationChange('growth', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
-                  min="0"
-                  max="100"
-                />
-              </label>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Conservative Growth
-                <input
-                  type="number"
-                  value={allocation.conservative_growth}
-                  onChange={(e) => handleAllocationChange('conservative_growth', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
-                  min="0"
-                  max="100"
-                />
-              </label>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Small Cap
-                <input
-                  type="number"
-                  value={allocation.small_cap}
-                  onChange={(e) => handleAllocationChange('small_cap', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
-                  min="0"
-                  max="100"
-                />
-              </label>
-            </div>
+  
+        <div className="mb-6">
+          <h3 className="text-lg font-medium mb-4 text-gray-700">Portfolio Allocation (%)</h3>
+          <div className="grid grid-cols-3 gap-6">
+            {Object.entries(allocation).map(([key, value]) => (
+              <div key={key} className="bg-white p-4 rounded-lg">
+                <label className="block text-sm font-medium text-gray-600 mb-2">
+                  {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                  <input
+                    type="number"
+                    value={value}
+                    onChange={(e) => handleAllocationChange(key, e.target.value)}
+                    className="mt-2 block w-full rounded-lg border-gray-200 border p-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500"
+                    min="0"
+                    max="100"
+                  />
+                </label>
+              </div>
+            ))}
           </div>
           {allocationError && (
-            <p className="text-red-500 mt-2">{allocationError}</p>
+            <p className="text-red-500 mt-4 text-sm">{allocationError}</p>
           )}
         </div>
-
+  
         <button
           type="submit"
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
           disabled={!!allocationError}
+          className="w-full bg-blue-500 text-white p-4 rounded-lg font-medium hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
           Calculate
         </button>
       </form>
-
+  
       {showResults && (
         <div className="space-y-8">
-          {/* Child 1 Charts */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold">Child 1 (Age 5) Portfolio Projections</h2>
-            <div className="h-96">
-              <ResponsiveContainer>
-                <BarChart data={[
-                  ...investmentData.child1.baseCase.data.map(d => ({
-                    year: d.year,
-                    'Base Case': d.balance,
-                    'Conservative': investmentData.child1.conservative.data[d.year].balance,
-                    'Optimistic': investmentData.child1.optimistic.data[d.year].balance
-                  }))
-                ]}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="year" />
-                  <YAxis tickFormatter={formatCurrency} />
-                  <Tooltip formatter={(value) => formatCurrency(value)} />
-                  <Legend />
-                  <Bar dataKey="Base Case" fill="#82ca9d" />
-                  <Bar dataKey="Conservative" fill="#ff9999" />
-                  <Bar dataKey="Optimistic" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
+          {/* Results Grid */}
+          <div className="grid grid-cols-3 gap-6 mb-8">
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h3 className="text-gray-500 text-sm mb-1">Base Return Rate</h3>
+              <p className="text-2xl font-semibold">{(baseBlendedReturn * 100).toFixed(2)}%</p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h3 className="text-gray-500 text-sm mb-1">Conservative Return Rate</h3>
+              <p className="text-2xl font-semibold">{(conservativeBlendedReturn * 100).toFixed(2)}%</p>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h3 className="text-gray-500 text-sm mb-1">Optimistic Return Rate</h3>
+              <p className="text-2xl font-semibold">{(optimisticBlendedReturn * 100).toFixed(2)}%</p>
             </div>
           </div>
-
-          {/* Child 2 Charts */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold">Child 2 (Age 3) Portfolio Projections</h2>
-            <div className="h-96">
-              <ResponsiveContainer>
-                <BarChart data={[
-                  ...investmentData.child2.baseCase.data.map(d => ({
-                    year: d.year,
-                    'Base Case': d.balance,
-                    'Conservative': investmentData.child2.conservative.data[d.year].balance,
-                    'Optimistic': investmentData.child2.optimistic.data[d.year].balance
-                  }))
-                ]}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="year" />
-                  <YAxis tickFormatter={formatCurrency} />
-                  <Tooltip formatter={(value) => formatCurrency(value)} />
-                  <Legend />
-                  <Bar dataKey="Base Case" fill="#82ca9d" />
-                  <Bar dataKey="Conservative" fill="#ff9999" />
-                  <Bar dataKey="Optimistic" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
+  
+          {/* Charts */}
+          <div className="space-y-8">
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h2 className="text-xl font-semibold mb-6 text-gray-800">Child 1 (Age 5) Portfolio Projections</h2>
+              <div className="h-96">
+                <ResponsiveContainer>
+                  <BarChart data={[
+                    ...investmentData.child1.baseCase.data.map(d => ({
+                      year: d.year,
+                      'Base Case': d.balance,
+                      'Conservative': investmentData.child1.conservative.data[d.year].balance,
+                      'Optimistic': investmentData.child1.optimistic.data[d.year].balance
+                    }))
+                  ]}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="year" />
+                    <YAxis tickFormatter={formatCurrency} />
+                    <Tooltip formatter={(value) => formatCurrency(value)} />
+                    <Legend />
+                    <Bar dataKey="Base Case" fill="#4ade80" />
+                    <Bar dataKey="Conservative" fill="#fb7185" />
+                    <Bar dataKey="Optimistic" fill="#60a5fa" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+  
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h2 className="text-xl font-semibold mb-6 text-gray-800">Child 2 (Age 3) Portfolio Projections</h2>
+              <div className="h-96">
+                <ResponsiveContainer>
+                  <BarChart data={[
+                    ...investmentData.child2.baseCase.data.map(d => ({
+                      year: d.year,
+                      'Base Case': d.balance,
+                      'Conservative': investmentData.child2.conservative.data[d.year].balance,
+                      'Optimistic': investmentData.child2.optimistic.data[d.year].balance
+                    }))
+                  ]}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="year" />
+                    <YAxis tickFormatter={formatCurrency} />
+                    <Tooltip formatter={(value) => formatCurrency(value)} />
+                    <Legend />
+                    <Bar dataKey="Base Case" fill="#4ade80" />
+                    <Bar dataKey="Conservative" fill="#fb7185" />
+                    <Bar dataKey="Optimistic" fill="#60a5fa" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
-
-          {/* Investment Summary */}
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-xl font-bold mb-4">Investment Summary</h2>
-            
-            <div className="grid grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Child 1 (Age 5)</h3>
-                <ul className="space-y-2">
-                  <li>Investment Period: {investmentData.child1.years} years</li>
-                  <li>Required Monthly Investment: {formatCurrency(investmentData.child1.baseCase.monthly)}</li>
-                  <li>Final Balance (Base Case): {formatCurrency(investmentData.child1.baseCase.data[investmentData.child1.years].balance)}</li>
-                  <li>Final Balance (Conservative): {formatCurrency(investmentData.child1.conservative.data[investmentData.child1.years].balance)}</li>
-                  <li>Final Balance (Optimistic): {formatCurrency(investmentData.child1.optimistic.data[investmentData.child1.years].balance)}</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Child 2 (Age 3)</h3>
-                <ul className="space-y-2">
-                  <li>Investment Period: {investmentData.child2.years} years</li>
-                  <li>Required Monthly Investment: {formatCurrency(investmentData.child2.baseCase.monthly)}</li>
-                  <li>Final Balance (Base Case): {formatCurrency(investmentData.child2.baseCase.data[investmentData.child2.years].balance)}</li>
-                  <li>Final Balance (Conservative): {formatCurrency(investmentData.child2.conservative.data[investmentData.child2.years].balance)}</li>
-                  <li>Final Balance (Optimistic): {formatCurrency(investmentData.child2.optimistic.data[investmentData.child2.years].balance)}</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-4 p-4 bg-blue-50 rounded">
-              <h3 className="text-lg font-semibold mb-2">Portfolio Details</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-medium mb-1">Allocation</h4>
-                  <ul>
-                    <li>Growth Portfolio: {allocation.growth}%</li>
-                    <li>Conservative Growth: {allocation.conservative_growth}%</li>
-                    <li>Small Cap: {allocation.small_cap}%</li>
-                  </ul>
+  
+          {/* Summary Cards */}
+          <div className="grid grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">Child 1 (Age 5) Summary</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Investment Period</span>
+                  <span className="font-medium">{investmentData.child1.years} years</span>
                 </div>
-                <div>
-                  <h4 className="font-medium mb-1">Return Scenarios</h4>
-                  <ul>
-                    <li>Base Case Return: {(baseBlendedReturn * 100).toFixed(2)}%</li>
-                    <li>Conservative Case Return: {(conservativeBlendedReturn * 100).toFixed(2)}%</li>
-                    <li>Optimistic Case Return: {(optimisticBlendedReturn * 100).toFixed(2)}%</li>
-                  </ul>
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Monthly Investment</span>
+                  <span className="font-medium">{formatCurrency(investmentData.child1.baseCase.monthly)}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Base Case Final</span>
+                  <span className="font-medium text-emerald-600">{formatCurrency(investmentData.child1.baseCase.data[investmentData.child1.years].balance)}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Conservative Final</span>
+                  <span className="font-medium text-red-500">{formatCurrency(investmentData.child1.conservative.data[investmentData.child1.years].balance)}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600">Optimistic Final</span>
+                  <span className="font-medium text-blue-500">{formatCurrency(investmentData.child1.optimistic.data[investmentData.child1.years].balance)}</span>
+                </div>
+              </div>
+            </div>
+  
+            <div className="bg-white p-6 rounded-xl shadow-sm">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">Child 2 (Age 3) Summary</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Investment Period</span>
+                  <span className="font-medium">{investmentData.child2.years} years</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Monthly Investment</span>
+                  <span className="font-medium">{formatCurrency(investmentData.child2.baseCase.monthly)}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Base Case Final</span>
+                  <span className="font-medium text-emerald-600">{formatCurrency(investmentData.child2.baseCase.data[investmentData.child2.years].balance)}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b">
+                  <span className="text-gray-600">Conservative Final</span>
+                  <span className="font-medium text-red-500">{formatCurrency(investmentData.child2.conservative.data[investmentData.child2.years].balance)}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-gray-600">Optimistic Final</span>
+                  <span className="font-medium text-blue-500">{formatCurrency(investmentData.child2.optimistic.data[investmentData.child2.years].balance)}</span>
                 </div>
               </div>
             </div>
@@ -337,6 +334,5 @@ const PortfolioGrowthCalculator = () => {
       )}
     </div>
   );
-};
 
 export default PortfolioGrowthCalculator;
