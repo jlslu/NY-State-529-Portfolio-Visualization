@@ -188,7 +188,7 @@ const PortfolioGrowthCalculator = () => {
       <form onSubmit={handleSubmit} className="mb-8 p-6 bg-white rounded-xl shadow-sm">
   <div className="grid grid-cols-2 gap-6 mb-6">
     <div className="bg-white p-4 rounded-lg">
-      <label className="block text-sm font-medium text-gray-600 mb-2">
+      <label className="block text-lg font-medium text-gray-600 mb-2">
         Target Amount ($)
         <input
           type="number"
@@ -200,7 +200,7 @@ const PortfolioGrowthCalculator = () => {
       </label>
     </div>
     <div className="bg-white p-4 rounded-lg">
-      <label className="block text-sm font-medium text-gray-600 mb-2">
+      <label className="block text-lg font-medium text-gray-600 mb-2">
         Target Age
         <input
           type="number"
@@ -217,7 +217,7 @@ const PortfolioGrowthCalculator = () => {
   {/* Children Section */}
   <div className="mb-6">
     <div className="flex justify-between items-center mb-4">
-      <h3 className="text-lg font-medium text-gray-700">Children</h3>
+      <h3 className="text-lg font-medium text-gray-700">Enter the age per child</h3>
       <button
         type="button"
         onClick={addChild}
