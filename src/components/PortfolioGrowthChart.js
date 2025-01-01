@@ -183,7 +183,25 @@ const PortfolioGrowthCalculator = () => {
 
   const investmentData = calculateChildInvestments();
 
-  return (
+  return (  
+    <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
+  {/* Header Section */}
+  <div className="mb-8">
+    <h1 className="text-3xl font-bold text-gray-900 mb-4">
+      College Savings Calculator
+    </h1>
+    <div className="prose max-w-none text-gray-600">
+      <p className="mb-2">
+        Plan your children's educational future with our comprehensive college savings calculator. 
+        This tool helps you determine the monthly investments needed to reach your college savings goals.
+      </p>
+      <p>
+        Select from various investment portfolios, customize your risk scenarios, and see detailed 
+        projections for each child. All calculations are based on historical returns from the NY 529 
+        Direct Plan investment options.
+      </p>
+    </div>
+  </div>
     <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
       <form onSubmit={handleSubmit} className="mb-8 p-6 bg-white rounded-xl shadow-sm">
   <div className="grid grid-cols-2 gap-6 mb-6">
@@ -352,6 +370,7 @@ const PortfolioGrowthCalculator = () => {
     Calculate
   </button>
 </form>
+</div>
   
       {showResults && (
         <div className="space-y-8">
