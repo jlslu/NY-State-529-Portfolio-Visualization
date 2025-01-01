@@ -186,66 +186,172 @@ const PortfolioGrowthCalculator = () => {
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
       <form onSubmit={handleSubmit} className="mb-8 p-6 bg-white rounded-xl shadow-sm">
-        <div className="grid grid-cols-2 gap-6 mb-6">
-          <div className="bg-white p-4 rounded-lg">
-            <label className="block text-sm font-medium text-gray-600 mb-2">
-              Target Amount ($)
-              <input
-                type="number"
-                value={targetAmount}
-                onChange={(e) => setTargetAmount(Number(e.target.value))}
-                className="mt-2 block w-full rounded-lg border-gray-200 border p-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500"
-                min="1000"
-              />
-            </label>
-          </div>
-          <div className="bg-white p-4 rounded-lg">
-            <label className="block text-sm font-medium text-gray-600 mb-2">
-              Target Age
-              <input
-                type="number"
-                value={targetAge}
-                onChange={(e) => setTargetAge(Number(e.target.value))}
-                className="mt-2 block w-full rounded-lg border-gray-200 border p-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500"
-                min="10"
-                max="25"
-              />
-            </label>
-          </div>
-        </div>
-  
-        <div className="mb-6">
-          <h3 className="text-lg font-medium mb-4 text-gray-700">Portfolio Allocation (%)</h3>
-          <div className="grid grid-cols-3 gap-6">
-            {Object.entries(allocation).map(([key, value]) => (
-              <div key={key} className="bg-white p-4 rounded-lg">
-                <label className="block text-sm font-medium text-gray-600 mb-2">
-                  {key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-                  <input
-                    type="number"
-                    value={value}
-                    onChange={(e) => handleAllocationChange(key, e.target.value)}
-                    className="mt-2 block w-full rounded-lg border-gray-200 border p-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500"
-                    min="0"
-                    max="100"
-                  />
-                </label>
-              </div>
-            ))}
-          </div>
-          {allocationError && (
-            <p className="text-red-500 mt-4 text-sm">{allocationError}</p>
+  <div className="grid grid-cols-2 gap-6 mb-6">
+    <div className="bg-white p-4 rounded-lg">
+      <label className="block text-sm font-medium text-gray-600 mb-2">
+        Target Amount ($)
+        <input
+          type="number"
+          value={targetAmount}
+          onChange={(e) => setTargetAmount(Number(e.target.value))}
+          className="mt-2 block w-full rounded-lg border-gray-200 border p-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500"
+          min="1000"
+        />
+      </label>
+    </div>
+    <div className="bg-white p-4 rounded-lg">
+      <label className="block text-sm font-medium text-gray-600 mb-2">
+        Target Age
+        <input
+          type="number"
+          value={targetAge}
+          onChange={(e) => setTargetAge(Number(e.target.value))}
+          className="mt-2 block w-full rounded-lg border-gray-200 border p-3 text-gray-700 focus:border-blue-500 focus:ring-blue-500"
+          min="10"
+          max="25"
+        />
+      </label>
+    </div>
+  </div>
+
+  {/* Children Section */}
+  <div className="mb-6">
+    <div className="flex justify-between items-center mb-4">
+      <h3 className="text-lg font-medium text-gray-700">Children</h3>
+      <button
+        type="button"
+        onClick={addChild}
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+      >
+        Add Child
+      </button>
+    </div>
+    <div className="space-y-4">
+      {children.map(child => (
+        <div key={child.id} className="flex items-center gap-4">
+          <input
+            type="number"
+            value={child.age}
+            onChange={(e) => updateChildAge(child.id, Number(e.target.value))}
+            className="block w-full rounded-lg border-gray-200 border p-3"
+            placeholder="Age"
+            min="0"
+            max="18"
+          />
+          {children.length > 1 && (
+            <button
+              type="button"
+              onClick={() => removeChild(child.id)}
+              className="px-3 py-2 bg-red-500 text-white rounded-lg"
+            >
+              Remove
+            </button>
           )}
         </div>
-  
-        <button
-          type="submit"
-          disabled={!!allocationError}
-          className="w-full bg-blue-500 text-white p-4 rounded-lg font-medium hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-        >
-          Calculate
-        </button>
-      </form>
+      ))}
+    </div>
+  </div>
+
+  {/* Portfolio Selection Section */}
+  <div className="mb-6">
+    <div className="flex justify-between items-center mb-4">
+      <h3 className="text-lg font-medium text-gray-700">Portfolio Selection</h3>
+      <button
+        type="button"
+        onClick={addPortfolio}
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+      >
+        Add Portfolio
+      </button>
+    </div>
+    <div className="space-y-4">
+      {selectedPortfolios.map((portfolio, index) => (
+        <div key={index} className="flex items-center gap-4">
+          <select
+            value={portfolio.portfolio}
+            onChange={(e) => updatePortfolio(index, 'portfolio', e.target.value)}
+            className="block w-2/3 rounded-lg border-gray-200 border p-3"
+          >
+            <option value="">Select Portfolio</option>
+            {Object.entries(availablePortfolios).map(([key, value]) => (
+              <option key={key} value={key}>
+                {value.name} ({(value.return * 100).toFixed(2)}% return)
+              </option>
+            ))}
+          </select>
+          <input
+            type="number"
+            value={portfolio.allocation}
+            onChange={(e) => updatePortfolio(index, 'allocation', e.target.value)}
+            className="block w-1/3 rounded-lg border-gray-200 border p-3"
+            placeholder="Allocation %"
+            min="0"
+            max="100"
+          />
+          {selectedPortfolios.length > 1 && (
+            <button
+              type="button"
+              onClick={() => removePortfolio(index)}
+              className="px-3 py-2 bg-red-500 text-white rounded-lg"
+            >
+              Remove
+            </button>
+          )}
+        </div>
+      ))}
+      {allocationError && (
+        <p className="text-red-500 mt-2">{allocationError}</p>
+      )}
+    </div>
+  </div>
+
+  {/* Scenario Percentages */}
+  <div className="mb-6">
+    <h3 className="text-lg font-medium mb-4 text-gray-700">Scenario Adjustments</h3>
+    <div className="grid grid-cols-2 gap-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-600 mb-2">
+          Conservative Scenario (% Lower)
+          <input
+            type="number"
+            value={scenarioPercentages.conservative}
+            onChange={(e) => setScenarioPercentages(prev => ({
+              ...prev,
+              conservative: Number(e.target.value)
+            }))}
+            className="mt-2 block w-full rounded-lg border-gray-200 border p-3"
+            min="0"
+            max="100"
+          />
+        </label>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-600 mb-2">
+          Optimistic Scenario (% Higher)
+          <input
+            type="number"
+            value={scenarioPercentages.optimistic}
+            onChange={(e) => setScenarioPercentages(prev => ({
+              ...prev,
+              optimistic: Number(e.target.value)
+            }))}
+            className="mt-2 block w-full rounded-lg border-gray-200 border p-3"
+            min="0"
+            max="100"
+          />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <button
+    type="submit"
+    disabled={!!allocationError}
+    className="w-full bg-blue-500 text-white p-4 rounded-lg font-medium hover:bg-blue-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+  >
+    Calculate
+  </button>
+</form>
   
       {showResults && (
         <div className="space-y-8">
