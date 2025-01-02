@@ -203,7 +203,7 @@ const PortfolioGrowthCalculator = () => {
     </div>
   </div>
     <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
-      <form onSubmit={handleSubmit} className="mb-8 p-6 bg-white rounded-xl shadow-sm">
+      <form onSubmit={handleSubmit} className="p-6 bg-white rounded-xl shadow-sm">
   <div className="grid grid-cols-2 gap-6 mb-6">
     <div className="bg-white p-4 rounded-lg">
       <label className="block text-lg font-medium text-gray-600 mb-2">
@@ -375,9 +375,9 @@ const PortfolioGrowthCalculator = () => {
       {showResults && (
         <div className="space-y-8">
           {/* Return Rate Summary */}
-          <div className="grid grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-xl shadow-sm">
-              <h3 className="text-gray-500 text-sm mb-1">Base Return Rate</h3>
+              <h3 className="text-gray-500 text-sm mb-1">urn Rate</h3>
               <p className="text-2xl font-semibold">{(calculateBlendedReturn() * 100).toFixed(2)}%</p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm">
