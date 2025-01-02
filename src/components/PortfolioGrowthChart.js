@@ -371,13 +371,12 @@ const PortfolioGrowthCalculator = () => {
   </button>
 </form>
 </div>
-  
       {showResults && (
         <div className="space-y-8">
           {/* Return Rate Summary */}
           <div className="grid grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-xl shadow-sm">
-              <h3 className="text-gray-500 text-sm mb-1">urn Rate</h3>
+              <h3 className="text-gray-500 text-sm mb-1">Base Return Rate</h3>
               <p className="text-2xl font-semibold">{(calculateBlendedReturn() * 100).toFixed(2)}%</p>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm">
